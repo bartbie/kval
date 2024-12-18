@@ -11,10 +11,11 @@ const NavItem: React.FC<{ to: string; children: string }> = ({
   children,
 }) => (
   <NavigationMenuItem>
-    <Link to={to}>
-      <NavigationMenuLink className="rounded-lg border border-transparent px-4 py-2 text-base transition-colors focus:outline focus:outline-4 focus:outline-[auto] focus:outline-webkit-focus-ring-color hover:border-[#646cff]">
-        {children}
-      </NavigationMenuLink>
+    <Link
+      to={to}
+      className="rounded-lg border border-transparent px-4 py-2 text-base transition-colors focus:outline focus:outline-4 focus:outline-[auto] focus:outline-webkit-focus-ring-color hover:border-[#646cff]"
+    >
+      {children}
     </Link>
   </NavigationMenuItem>
 );
