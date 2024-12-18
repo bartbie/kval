@@ -8,7 +8,9 @@
         "dev:backend": "pnpm run --dir apps/backend dev",
         "preinstall": "npx only-allow pnpm",
         "format": "prettier . --write",
-        "build:libs": "pnpm run --filter=./libs/* build"
+        "build:libs": "pnpm run --filter=./libs/* build",
+        "preinstall": "npx only-allow pnpm",
+        "format": "prettier . --write"
     },
     "license": "ISC",
     "private": true,
@@ -18,6 +20,7 @@
         "pnpm": "^9.0.0"
     },
     "devDependencies": {
-        "@nestjs/cli": "^10.4.9"
+        "@nestjs/cli": "^10.4.9",
+        "prettier": "^3.0.0"
     }
 }
