@@ -21,12 +21,12 @@ const NavItem: React.FC<{ to: string; children: string }> = ({
 
 export default () => {
   return (
-    <header className="fixed top-0 w-full shadow-md z-50 flex items-center justify-between p-2">
+    <header className="fixed top-0 w-full shadow-md z-50 flex items-center justify-between p-4">
       Musik Sampsil
       <NavigationMenu>
         <NavigationMenuList>
-          <NavItem to="auth/login">Log in</NavItem>
-          <NavItem to="auth/signup">Sign up</NavItem>
+          <NavItem to="/auth/login">Log in</NavItem>
+          <NavItem to="/auth/signup">Sign up</NavItem>
         </NavigationMenuList>
       </NavigationMenu>
     </header>
