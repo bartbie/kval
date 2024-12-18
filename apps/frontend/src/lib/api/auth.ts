@@ -43,7 +43,19 @@ let userMock: Omit<SignUpFormInput, "confirmPassword"> | null = null;
 
 export const signup = async (
   data: Omit<SignUpFormInput, "confirmPassword">
-) => {
+): Promise<
+  | {
+      success: true;
+      data: Omit<SignUpFormInput, "confirmPassword">;
+    }
+  | {
+      success: false;
+      error: string;
+    }
+> => {
+  if (data.email === "test@test.com") {
+    return { success: false, error: "Email is taken!" } as const;
+  }
   userMock = data;
   return { success: true, data } as const;
 };

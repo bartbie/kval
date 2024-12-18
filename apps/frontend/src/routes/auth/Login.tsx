@@ -8,23 +8,52 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { SubmitHandler } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
 import { setAuthTitle } from "./AuthLayout";
 import { LoginFormInput, loginFormSchema } from "../../lib/api/auth";
+import { useMutation } from "@tanstack/react-query";
+import * as auth from "../../lib/api/auth";
+import { useZodForm } from "@/hooks/use-zod-form";
+import { useToast } from "@/hooks/use-toast";
+
+const mutationFn = async (data: LoginFormInput) => {
+  const result = await auth.login(data);
+  if (!result.success) {
+    throw new Error(result.error);
+  }
+  return result.data;
+};
 
 export default () => {
   setAuthTitle("Login");
 
-  const form = useForm<LoginFormInput>({
-    resolver: zodResolver(loginFormSchema),
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const form = useZodForm(loginFormSchema, {
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
   const { handleSubmit, control } = form;
 
+  const mutation = useMutation({
+    mutationFn,
+    onSuccess: (x) => {
+      navigate("/me");
+    },
+    onError: (x) => {
+      toast({
+        title: "Error!",
+        description: x.message,
+      });
+    },
+  });
+
   const onSubmit: SubmitHandler<LoginFormInput> = (data) => {
-    // TODO
-    console.log(data);
+    mutation.mutate(data);
   };
 
   return (
@@ -62,23 +91,11 @@ export default () => {
           </Button>
         </form>
       </Form>
-
-      {/* Navigation to Signup */}
       <div className="text-center mt-4">
         <Link to="/auth/signup" className="text-blue-600 hover:underline">
           Don't have an account? Sign Up
         </Link>
       </div>
-
-      {/* Forgot Password Link */}
-      {/* <div className="text-center mt-2">
-            <Link
-              to="/forgot-password"
-              className="text-sm text-gray-600 hover:underline"
-            >
-              Forgot Password?
-            </Link>
-          </div> */}
     </>
   );
 };
