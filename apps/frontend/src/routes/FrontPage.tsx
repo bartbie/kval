@@ -1,4 +1,4 @@
-import UnloggedHeader from "../components/UnloggedHeader";
+import UnloggedHeader from "../components/headers/UnloggedHeader";
 
 export default () => {
   return (
