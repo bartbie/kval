@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const uuidSchema = z.string().uuid("Id is not a valid UUID");
+export const uuidSchema = z.string();
+// .uuid("Id is not a valid UUID");
 
 export const withIdSchema = z.object({
     _id: uuidSchema,

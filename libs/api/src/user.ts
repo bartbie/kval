@@ -13,12 +13,14 @@ export const userFLNameSchema = z.object({
     lastName: z.string().min(2, "Last name is required"),
 });
 
-export const userInfoSchema = userFLNameSchema.extend({
-    age: z.number().int().min(18),
-    bio: z.string().default(""),
-    instruments: z.array(z.string()),
-    genres: z.array(z.string()),
-});
+export const userInfoSchema = userFLNameSchema
+    .extend({
+        age: z.number().int().min(18),
+        bio: z.string().default(""),
+        instruments: z.array(z.string()),
+        genres: z.array(z.string()),
+    })
+    .merge(withIdSchema);
 
 export type UserInfo = z.infer<typeof userInfoSchema>;
 
