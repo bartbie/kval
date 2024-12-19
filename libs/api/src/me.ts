@@ -1,6 +1,6 @@
 import { ensembleSchema } from "ensemble";
 import { uuidSchema } from "id";
-import { userInfoSchema } from "user";
+import { emailSchema, userInfoSchema } from "user";
 import { z } from "zod";
 
 export const ensembleFullSchema = ensembleSchema.extend({
@@ -26,3 +26,9 @@ export const userViewSchema = userInfoSchema.extend({
     ensembles: z.array(ensembleSchema),
 });
 export type UserView = z.infer<typeof userViewSchema>;
+
+export const userViewWithEmailSchema = userViewSchema.extend({
+    email: emailSchema,
+});
+
+export type UserViewWithEmail = z.infer<typeof userViewWithEmailSchema>;

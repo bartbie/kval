@@ -1,7 +1,7 @@
-import dotenv from 'dotenv';
+import { ConfigModule } from '@nestjs/config';
 import z from 'zod';
 
-dotenv.config();
+ConfigModule.forRoot();
 
 const ENV_SCHEMA = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
@@ -12,7 +12,7 @@ const ENV_SCHEMA = z.object({
   NODE_ENV: z
     .preprocess(
       (x) => typeof x == 'string' && x.toLowerCase(),
-      z.enum(['development', 'production']),
+      z.enum(['development', 'production', 'test']),
     )
     .default('production'),
 });
