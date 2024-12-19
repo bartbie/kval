@@ -1,0 +1,30 @@
+{
+    "name": "@libs/shared",
+    "version": "0.0.0",
+    "description": "Code shared across both client and server",
+    "private": true,
+    "type": "module",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.cts",
+    "exports": {
+        ".": {
+            "require": {
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
+            },
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            }
+        }
+    },
+    "scripts": {
+        "types": "tsc -p tsconfig.json --noEmit",
+        "build": "pkgroll"
+    },
+    "devDependencies": {
+        "pkgroll": "^2.5.1",
+        "typescript": "^5.6.2"
+    }
+}

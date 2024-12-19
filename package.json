@@ -6,7 +6,9 @@
         "dev": "pnpm run --filter=./apps/* dev",
         "dev:frontend": "pnpm run --dir apps/frontend dev",
         "dev:backend": "pnpm run --dir apps/backend dev",
-        "preinstall": "npx only-allow pnpm"
+        "preinstall": "npx only-allow pnpm",
+        "format": "prettier . --write",
+        "build:libs": "pnpm run --filter=./libs/* build"
     },
     "license": "ISC",
     "private": true,
