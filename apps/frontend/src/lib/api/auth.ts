@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { mock } from "./mock";
 
 export const loginFormSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -44,9 +45,6 @@ export const loginError = {
 
 export type LoginError = (typeof loginError)[keyof typeof loginError];
 
-// TODO: remove this mock later
-let userMock: Omit<SignUpFormInput, "confirmPassword"> | null = null;
-
 export const signup = async (
     data: Omit<SignUpFormInput, "confirmPassword">,
 ): Promise<
@@ -62,7 +60,6 @@ export const signup = async (
     if (data.email === "test@test.com") {
         return { success: false, error: "Email is taken!" } as const;
     }
-    userMock = data;
     return { success: true, data } as const;
 };
 
