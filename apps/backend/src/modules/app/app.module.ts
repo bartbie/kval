@@ -14,6 +14,7 @@ import { UUID } from 'bson';
 import { AuthModule } from '../auth/auth.module';
 import { ZodError } from 'zod';
 import mongoose from 'mongoose';
+import { UserModule } from '../user/user.module';
 
 @Catch(ZodError)
 export class ZodValidationExceptionFilter implements ExceptionFilter {
@@ -29,6 +30,8 @@ export class ZodValidationExceptionFilter implements ExceptionFilter {
     });
   }
 }
+
+const modules = [AuthModule, UserModule] as const;
 
 @Module({
   imports: [
@@ -47,7 +50,7 @@ export class ZodValidationExceptionFilter implements ExceptionFilter {
         return connection;
       },
     }),
-    AuthModule,
+    ...modules,
   ],
   controllers: [AppController],
   providers: [
