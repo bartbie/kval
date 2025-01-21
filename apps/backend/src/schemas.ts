@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { UUID } from 'bson';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
+const Id = mongoose.Schema.Types.ObjectId;
 const strArrayOpts = { type: [String], default: Array };
 
 @Schema()
@@ -39,8 +40,8 @@ export class Ensemble {
   @Prop()
   createdBy: string;
 
-  @Prop(strArrayOpts)
-  members: string[];
+  @Prop({ type: [{ type: Id, ref: 'User' }], default: Array })
+  members: (typeof Id)[];
 
   @Prop(strArrayOpts)
   genres: string[];

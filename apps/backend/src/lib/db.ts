@@ -1,6 +1,7 @@
+import { EnsembleFull } from '@libs/api';
 import { err, ok, type Result } from '@libs/shared';
 import mongoose from 'mongoose';
-import type { Model as Schema, UpdateQuery } from 'mongoose';
+import type { Model, UpdateQuery } from 'mongoose';
 
 export type ValidationResult<T> = Result<T, mongoose.Error.ValidationError>;
 
@@ -20,7 +21,7 @@ const runSafe = async <Ok>(
   }
 };
 
-export async function create<T>(model: Schema<T>, data: unknown) {
+export async function create<T>(model: Model<T>, data: unknown) {
   return await runSafe(async () => {
     const newEntry = new model(data);
     await newEntry.save();
@@ -29,7 +30,7 @@ export async function create<T>(model: Schema<T>, data: unknown) {
 }
 
 export async function update<T>(
-  model: Schema<T>,
+  model: Model<T>,
   id: unknown,
   data: UpdateQuery<T>,
 ) {
@@ -42,6 +43,6 @@ export async function update<T>(
 }
 
 // Named it del because delete is a reserved word
-export async function del<T>(model: Schema<T>, id: unknown) {
+export async function del<T>(model: Model<T>, id: unknown) {
   return await model.findByIdAndDelete(id);
 }
