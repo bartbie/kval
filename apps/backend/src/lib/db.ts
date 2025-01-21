@@ -1,4 +1,3 @@
-import { EnsembleFull } from '@libs/api';
 import { err, ok, type Result } from '@libs/shared';
 import mongoose from 'mongoose';
 import type { Model, UpdateQuery } from 'mongoose';

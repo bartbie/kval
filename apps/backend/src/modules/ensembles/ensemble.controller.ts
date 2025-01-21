@@ -1,19 +1,30 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { EnsembleService } from './ensemble.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { err, ok } from '@libs/shared';
+import { ZodValidationPipe } from 'nestjs-zod';
+import { z } from 'zod';
 
 @Controller('ensembles')
 export class EnsembleController {
   constructor(private readonly ensembleService: EnsembleService) {}
 
   @Get()
-  async get() {
-    return await this.ensembleService.findAll();
+  async getAll() {
+    return ok(await this.ensembleService.getAllFull());
   }
 
-  @Get()
-  @UseGuards(AuthGuard)
-  async get_tes() {
-    return await this.ensembleService.findAll();
+  @Get(':id')
+  @UsePipes(new ZodValidationPipe(z.string()))
+  async getUserView(@Param('id') id: string) {
+    const res = await this.ensembleService.getFull(id);
+    return res != null ? ok(res) : err('No such id');
   }
 }
