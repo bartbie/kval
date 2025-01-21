@@ -40,6 +40,6 @@ export class MeService {
 
   async updateMe(id: Id, patch: UpdateMe) {
     console.log(patch);
-    return await update(this.users, id, patch);
+    return await update(this.users, id, patch, { password: 0 });
   }
 }

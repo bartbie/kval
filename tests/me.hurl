@@ -48,6 +48,7 @@ my_id: jsonpath "$.data._id"
 jsonpath "$.success" == true
 jsonpath "$.data._id" exists
 jsonpath "$.data.email" == "sarah@example.com"
+jsonpath "$.data.password" not exists
 jsonpath "$.data.age" == 32
 jsonpath "$.data.bio" == "Classical violinist"
 jsonpath "$.data.genres" count == 1
@@ -86,6 +87,7 @@ HTTP 200
 jsonpath "$.success" == true
 jsonpath "$.data._id" exists
 jsonpath "$.data.email" == "sarah@example.com"
+jsonpath "$.data.password" not exists
 jsonpath "$.data.age" == 32
 jsonpath "$.data.bio" == "new awesome bio"
 jsonpath "$.data.genres" count == 1

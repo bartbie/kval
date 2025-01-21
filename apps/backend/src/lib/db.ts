@@ -1,6 +1,6 @@
 import { err, ok, type Result } from '@libs/shared';
 import mongoose from 'mongoose';
-import type { Model, UpdateQuery } from 'mongoose';
+import type { FilterQuery, Model, UpdateQuery } from 'mongoose';
 
 export type ValidationResult<T> = Result<T, mongoose.Error.ValidationError>;
 
@@ -32,11 +32,13 @@ export async function update<T>(
   model: Model<T>,
   id: any,
   data: UpdateQuery<T>,
+  filter?: FilterQuery<T>,
 ) {
   return await runSafe(async () => {
+    const match = { $match: { _id: new mongoose.Types.ObjectId(id) } };
     await model
       .aggregate([
-        { $match: { _id: new mongoose.Types.ObjectId(id) } },
+        match,
         { $set: data },
         {
           $merge: {
@@ -48,7 +50,7 @@ export async function update<T>(
       .exec();
 
     return await model
-      .aggregate([{ $match: { _id: new mongoose.Types.ObjectId(id) } }])
+      .aggregate(filter != undefined ? [match, { $project: filter }] : [match])
       .exec()
       .then((x: T[]) => x.at(0) ?? null);
   });
