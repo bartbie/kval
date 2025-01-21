@@ -33,28 +33,36 @@ export async function update<T>(
   model: Model<T>,
   id: Id,
   data: UpdateQuery<T>,
-  filter?: FilterQuery<T>,
+  filter?:
+    | { [P in keyof T]?: string | number | boolean | object }
+    | string
+    | string[],
 ) {
   return await runSafe(async () => {
-    const match = { $match: { _id: id } };
-    await model
-      .aggregate([
-        match,
-        { $set: data },
-        {
-          $merge: {
-            into: model.collection.name,
-            whenMatched: 'replace',
-          },
-        },
-      ])
-      .exec();
-
-    return await model
-      .aggregate(filter != undefined ? [match, { $project: filter }] : [match])
-      .exec()
-      .then((x: T[]) => x.at(0) ?? null);
+    const ex = model.findByIdAndUpdate(id, data, { new: true });
+    if (filter != undefined) return await ex.select(filter as any);
+    return await ex.exec();
   });
+  // return await runSafe(async () => {
+  //   const match = { $match: { _id: id } };
+  //   await model
+  //     .aggregate([
+  //       match,
+  //       { $set: data },
+  //       {
+  //         $merge: {
+  //           into: model.collection.name,
+  //           whenMatched: 'replace',
+  //         },
+  //       },
+  //     ])
+  //     .exec();
+  //
+  //   return await model
+  //     .aggregate(filter != undefined ? [match, { $project: filter }] : [match])
+  //     .exec()
+  //     .then((x: T[]) => x.at(0) ?? null);
+  // });
 }
 
 // Named it del because delete is a reserved word

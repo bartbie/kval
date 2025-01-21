@@ -77,6 +77,9 @@ export class Ensemble {
   @Prop({ type: [{ type: ObjectId, ref: 'User' }], default: [] })
   members: Id[];
 
+  @Prop()
+  bio: string;
+
   @Prop(strArrayOpts)
   genres: string[];
 }
