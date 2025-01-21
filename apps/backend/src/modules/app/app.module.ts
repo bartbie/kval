@@ -16,6 +16,7 @@ import { ZodError } from 'zod';
 import mongoose from 'mongoose';
 import { UserModule } from '../user/user.module';
 import { EnsembleModule } from '../ensembles/ensemble.module';
+import { MeModule } from '../me/me.module';
 
 @Catch(ZodError)
 export class ZodValidationExceptionFilter implements ExceptionFilter {
@@ -32,7 +33,7 @@ export class ZodValidationExceptionFilter implements ExceptionFilter {
   }
 }
 
-const modules = [AuthModule, UserModule, EnsembleModule] as const;
+const modules = [AuthModule, UserModule, EnsembleModule, MeModule] as const;
 
 @Module({
   imports: [

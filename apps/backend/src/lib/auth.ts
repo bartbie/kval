@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { env } from '../env';
 import { err, ok, type Result } from '@libs/shared';
-import type mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import type { IncomingHttpHeaders } from 'http';
 import type { Model } from 'mongoose';
 import type { User } from 'src/schemas';
@@ -40,7 +40,7 @@ export type UserCredentials = z.infer<typeof userCredentialsSchema>;
 const findUser = async (
   db: Model<User>,
   user: AuthTokenData,
-): Promise<User | null> =>
+): Promise<UserWithId | null> =>
   await db.findOne(authTokenDataSchema.strip().parse(user));
 
 const createUser = async (
@@ -103,8 +103,9 @@ export const createToken = (jwt: JwtService, user: AuthTokenData): Token => {
   }) as Token;
 };
 
+export type UserWithId = User & { _id: mongoose.Types.ObjectId };
 export type UserWithToken = {
-  user: User;
+  user: UserWithId;
   token: Token;
 };
 

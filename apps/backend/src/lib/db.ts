@@ -9,7 +9,7 @@ export type ValidationResult<T> = Result<T, mongoose.Error.ValidationError>;
  * @param f function to run
  * @returns Result with return value of the function or mongoose ValidationError
  */
-const runSafe = async <Ok>(
+export const runSafe = async <Ok>(
   f: () => Promise<Ok>,
 ): Promise<ValidationResult<Ok>> => {
   try {
@@ -30,14 +30,27 @@ export async function create<T>(model: Model<T>, data: unknown) {
 
 export async function update<T>(
   model: Model<T>,
-  id: unknown,
+  id: any,
   data: UpdateQuery<T>,
 ) {
   return await runSafe(async () => {
-    return await model.findByIdAndUpdate(id, data, {
-      new: true,
-      runValidators: true,
-    });
+    await model
+      .aggregate([
+        { $match: { _id: new mongoose.Types.ObjectId(id) } },
+        { $set: data },
+        {
+          $merge: {
+            into: model.collection.name,
+            whenMatched: 'replace',
+          },
+        },
+      ])
+      .exec();
+
+    return await model
+      .aggregate([{ $match: { _id: new mongoose.Types.ObjectId(id) } }])
+      .exec()
+      .then((x: T[]) => x.at(0) ?? null);
   });
 }
 
