@@ -1,9 +1,10 @@
-import { withIdSchema, mkWithId, uuidSchema } from "id";
+import { mkWithId, uuidSchema } from "id";
 import { z } from "zod";
 
 const ensembleBase = z.object({
     name: z.string().min(1),
     genres: z.array(z.string()),
+    bio: z.string().default(""),
 });
 
 export const newEnsembleSchema = ensembleBase.strip();
@@ -17,8 +18,9 @@ export const ensembleSchema = ensembleCreatedSchema.extend({
 });
 
 export const updateEnsembleSchema = ensembleBase
+    .omit({ bio: true })
+    .extend({ bio: z.string() })
     .partial()
-    .merge(withIdSchema)
     .strip();
 
 export type NewEnsemble = z.infer<typeof newEnsembleSchema>;

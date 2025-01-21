@@ -5,7 +5,7 @@ export const emailSchema = z.string().email("Invalid email address");
 
 export const credentialsSchema = z.object({
     email: emailSchema,
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z.string().min(1), // we check len during signup and for testing we may want shorter psswd
 });
 
 export const userFLNameSchema = z.object({
