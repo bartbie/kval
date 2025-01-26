@@ -1,11 +1,9 @@
 import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { User } from '../../schemas';
+import { Id, User } from '../../schemas';
 import { MeWithEnsembles, UpdateMe } from '@libs/api';
 import { update } from 'src/lib/db';
-
-type Id = string | mongoose.Types.ObjectId;
 
 @Injectable()
 export class MeService {

@@ -3,6 +3,7 @@ import { err, ok } from '@libs/shared';
 import { UserService } from './user.service';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
+import { Id, IdValidationPipe } from 'src/schemas';
 
 @Controller('users')
 export class UserController {
@@ -14,8 +15,8 @@ export class UserController {
   }
 
   @Get(':id')
-  @UsePipes(new ZodValidationPipe(z.string()))
-  async getUserView(@Param('id') id: string) {
+  @UsePipes(IdValidationPipe)
+  async getUserView(@Param('id') id: Id) {
     const res = await this.userService.getUserView(id);
     return res != null ? ok(res) : err('No such id');
   }

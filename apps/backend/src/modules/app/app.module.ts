@@ -10,7 +10,6 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { env } from '../../env';
-import { UUID } from 'bson';
 import { AuthModule } from '../auth/auth.module';
 import { ZodError } from 'zod';
 import mongoose from 'mongoose';
@@ -38,19 +37,19 @@ const modules = [AuthModule, UserModule, EnsembleModule, MeModule] as const;
 @Module({
   imports: [
     MongooseModule.forRoot(env.MONGO_URL, {
-      pkFactory: { createPk: () => new UUID().toString() },
-      connectionFactory: (connection) => {
-        mongoose.Schema.ObjectId.cast((x: object) => `${x}`);
-        mongoose.Schema.ObjectId.get((v: any) => v?.toString());
-        connection.set('toJSON', {
-          transform: (_: any, ret: any) => {
-            const converted = { ...ret };
-            if (converted._id) converted._id = converted._id.toString();
-            return converted;
-          },
-        });
-        return connection;
-      },
+      // pkFactory: { createPk: () => new UUID().toString() },
+      // connectionFactory: (connection) => {
+      //   mongoose.Schema.ObjectId.cast((x: object) => `${x}`);
+      //   mongoose.Schema.ObjectId.get((v: any) => v?.toString());
+      //   connection.set('toJSON', {
+      //     transform: (_: any, ret: any) => {
+      //       const converted = { ...ret };
+      //       if (converted._id) converted._id = converted._id.toString();
+      //       return converted;
+      //     },
+      //   });
+      //   return connection;
+      // },
     }),
     ...modules,
   ],

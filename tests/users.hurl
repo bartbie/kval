@@ -30,6 +30,6 @@ jsonpath "$.data.ensembles[0].genres" count == 1
 
 
 GET {{host}}/api/users/92d7f38584bf0ce462a28470036cb4d9d71eb0437842c64
-HTTP 200
+HTTP 400
 [Asserts]
-jsonpath "$.success" == false
+# jsonpath "$.success" == false

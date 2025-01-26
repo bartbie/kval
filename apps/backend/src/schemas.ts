@@ -1,9 +1,43 @@
+import { ArgumentMetadata, Injectable } from '@nestjs/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UUID } from 'bson';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { createZodValidationPipe, ZodValidationPipe } from 'nestjs-zod';
+import { z } from 'zod';
+const { ObjectId } = mongoose.Types;
 
-const Id = mongoose.Schema.Types.ObjectId;
-const strArrayOpts = { type: [String], default: Array };
+export type Id = mongoose.Types.ObjectId;
+
+export const IdSchema = z.string().transform((val, ctx) => {
+  try {
+    if (!ObjectId.isValid(val)) {
+      throw null;
+    }
+    return new ObjectId(val);
+  } catch {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Invalid id',
+    });
+    return z.NEVER;
+  }
+});
+// .length(24)
+// .regex(/^[0-9A-Fa-f]+$/, 'Invalid id')
+
+@Injectable()
+export class IdValidationPipeClass extends ZodValidationPipe {
+  transform(value: unknown, metadata: ArgumentMetadata) {
+    // Only validate if it's an 'id' parameter
+    if (metadata.type === 'param' && metadata.data === 'id') {
+      return super.transform(value, metadata);
+    }
+    return value;
+  }
+}
+
+export const IdValidationPipe = new IdValidationPipeClass(IdSchema);
+
+const strArrayOpts = { type: [String], default: [] };
 
 @Schema()
 export class User {
@@ -37,11 +71,11 @@ export class Ensemble {
   @Prop()
   name: string;
 
-  @Prop()
-  createdBy: string;
+  @Prop({ type: ObjectId, ref: 'User' })
+  createdBy: Id;
 
-  @Prop({ type: [{ type: Id, ref: 'User' }], default: Array })
-  members: (typeof Id)[];
+  @Prop({ type: [{ type: ObjectId, ref: 'User' }], default: [] })
+  members: Id[];
 
   @Prop(strArrayOpts)
   genres: string[];

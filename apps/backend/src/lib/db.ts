@@ -1,6 +1,7 @@
 import { err, ok, type Result } from '@libs/shared';
 import mongoose from 'mongoose';
 import type { FilterQuery, Model, UpdateQuery } from 'mongoose';
+import { Id } from 'src/schemas';
 
 export type ValidationResult<T> = Result<T, mongoose.Error.ValidationError>;
 
@@ -30,12 +31,12 @@ export async function create<T>(model: Model<T>, data: unknown) {
 
 export async function update<T>(
   model: Model<T>,
-  id: any,
+  id: Id,
   data: UpdateQuery<T>,
   filter?: FilterQuery<T>,
 ) {
   return await runSafe(async () => {
-    const match = { $match: { _id: new mongoose.Types.ObjectId(id) } };
+    const match = { $match: { _id: id } };
     await model
       .aggregate([
         match,
@@ -57,6 +58,6 @@ export async function update<T>(
 }
 
 // Named it del because delete is a reserved word
-export async function del<T>(model: Model<T>, id: unknown) {
+export async function del<T>(model: Model<T>, id: Id) {
   return await model.findByIdAndDelete(id);
 }

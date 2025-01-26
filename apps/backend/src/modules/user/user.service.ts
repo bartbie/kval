@@ -1,7 +1,7 @@
 import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { Ensemble, User } from '../../schemas';
+import { Ensemble, Id, User } from '../../schemas';
 import { UserView } from '@libs/api';
 
 @Injectable()
@@ -30,12 +30,12 @@ export class UserService {
       ])
       .exec();
   }
-  async getUserView(id: string): Promise<UserView | null> {
+  async getUserView(id: Id): Promise<UserView | null> {
     try {
       return await this.users
         .aggregate([
           {
-            $match: { _id: new mongoose.Types.ObjectId(id) },
+            $match: { _id: id },
           },
           {
             $lookup: {

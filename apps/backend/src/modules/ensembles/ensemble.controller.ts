@@ -11,6 +11,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { err, ok } from '@libs/shared';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { z } from 'zod';
+import { Id, IdValidationPipe } from 'src/schemas';
 
 @Controller('ensembles')
 export class EnsembleController {
@@ -22,8 +23,8 @@ export class EnsembleController {
   }
 
   @Get(':id')
-  @UsePipes(new ZodValidationPipe(z.string()))
-  async getUserView(@Param('id') id: string) {
+  @UsePipes(IdValidationPipe)
+  async getUserView(@Param('id') id: Id) {
     const res = await this.ensembleService.getFull(id);
     return res != null ? ok(res) : err('No such id');
   }
