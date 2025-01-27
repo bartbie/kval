@@ -1,13 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { useUser } from "@/hooks/use-user";
 import { useZodForm } from "@/hooks/use-zod-form";
 import * as API from "@libs/api";
@@ -16,8 +8,6 @@ import { unpackResult } from "@/lib/utils";
 import { update } from "@/lib/api/me";
 import { useNavigate } from "react-router";
 import { useToast } from "@/hooks/use-toast";
-import React from "react";
-import { UseFormReturn } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import ListField from "@/components/forms/ListField";
 import SimpleField from "@/components/forms/SimpleField";

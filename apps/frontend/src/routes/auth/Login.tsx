@@ -1,13 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Link } from "react-router";
 import { setAuthTitle } from "./AuthLayout";
 import { useZodForm } from "@/hooks/use-zod-form";

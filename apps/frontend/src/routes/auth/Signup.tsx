@@ -1,15 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Link } from "react-router";
 import { setAuthTitle } from "./AuthLayout";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useZodForm } from "@/hooks/use-zod-form";
 import { signupFormSchema } from "@libs/api";
 import { useSignup } from "@/lib/auth";
