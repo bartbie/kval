@@ -7,6 +7,7 @@ import Home from "./me/Home";
 import CreateProfile from "./auth/CreateProfile";
 import { Toaster } from "@/components/ui/toaster";
 import { ProtectedRoute } from "@/lib/auth";
+import { BaseHeader } from "@/components/headers/BaseHeader";
 
 const RootLayout = () => (
     <>
@@ -24,7 +25,14 @@ export default () => {
                     <Route path="login" element={<Login />} />
                     <Route path="signup" element={<Signup />} />
                 </Route>
-                <Route path="auth">
+                <Route
+                    path="auth"
+                    element={
+                        <ProtectedRoute>
+                            <AuthLayout header={<BaseHeader />} />
+                        </ProtectedRoute>
+                    }
+                >
                     <Route path="create-profile" element={<CreateProfile />} />
                 </Route>
                 <Route path="me" element={<ProtectedRoute />}>

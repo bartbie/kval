@@ -3,11 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { Outlet, useOutletContext } from "react-router";
 
-export const AuthLayout = () => {
+export const AuthLayout = ({
+    header = <UnloggedHeader />,
+}: {
+    header?: React.ReactNode;
+}) => {
     const [title, setTitle] = useState("");
     return (
         <>
-            <UnloggedHeader />
+            {header}
             <main className="flex justify-center items-center min-h-screen">
                 <Card className="w-full max-w-md">
                     <CardHeader>
