@@ -9,7 +9,7 @@ api.interceptors.request.use((config) => {
     return config;
 });
 api.interceptors.response.use(
-    (response) => response,
+    (response) => response.data,
     (error) => {
         if (error.response) {
             if (error.response?.success !== undefined) return error.response;

@@ -8,58 +8,29 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SubmitHandler } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { setAuthTitle } from "./AuthLayout";
-import { LoginFormInput, loginFormSchema } from "../../lib/api/auth";
-import { useMutation } from "@tanstack/react-query";
-import * as auth from "../../lib/api/auth";
 import { useZodForm } from "@/hooks/use-zod-form";
-import { useToast } from "@/hooks/use-toast";
-
-const mutationFn = async (data: LoginFormInput) => {
-    const result = await auth.login(data);
-    if (!result.success) {
-        throw new Error(result.error);
-    }
-    return result.data;
-};
+import { loginSchema } from "@libs/api";
+import { useLogin } from "@/lib/auth";
 
 export default () => {
     setAuthTitle("Login");
 
-    const { toast } = useToast();
-    const navigate = useNavigate();
-
-    const form = useZodForm(loginFormSchema, {
+    const login = useLogin();
+    const form = useZodForm(loginSchema, {
         defaultValues: {
             email: "",
             password: "",
         },
+        onSubmit: (data) => login.mutate(data),
     });
-    const { handleSubmit, control } = form;
-
-    const mutation = useMutation({
-        mutationFn,
-        onSuccess: (x) => {
-            navigate("/me");
-        },
-        onError: (x) => {
-            toast({
-                title: "Error!",
-                description: x.message,
-            });
-        },
-    });
-
-    const onSubmit: SubmitHandler<LoginFormInput> = (data) => {
-        mutation.mutate(data);
-    };
+    const { onSubmit, control } = form;
 
     return (
         <>
             <Form {...form}>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={onSubmit} className="space-y-4">
                     <FormField
                         control={control}
                         name="email"
@@ -94,7 +65,11 @@ export default () => {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full">
+                    <Button
+                        type="submit"
+                        className="w-full"
+                        disabled={login.isPending}
+                    >
                         Login
                     </Button>
                 </form>

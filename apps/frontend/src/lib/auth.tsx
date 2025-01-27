@@ -11,7 +11,7 @@ const TOKEN_KEY = "auth_token";
 
 const getToken = (): string | null => {
     const token = sessionStorage.getItem(TOKEN_KEY);
-    return token ? JSON.parse(token) : null;
+    return token ? token : null;
 };
 
 const setToken = (token: string) => {
@@ -80,6 +80,10 @@ export const AuthProvider = (x: {
         );
     }
     const { data: user, isLoading, error, isError } = useUserInternal();
+
+    if (isError) {
+        clearToken();
+    }
 
     return (
         <AuthContext.Provider

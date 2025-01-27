@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { setAuthTitle } from "./AuthLayout";
 import {
     Form,
@@ -12,26 +10,15 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { SignUpFormInput, signupSchema } from "@/lib/api/auth";
-import { useMutation } from "@tanstack/react-query";
-import * as auth from "../../lib/api/auth";
 import { useZodForm } from "@/hooks/use-zod-form";
-import { useToast } from "@/hooks/use-toast";
-
-const mutationFn = async (data: SignUpFormInput) => {
-    const result = await auth.signup(data);
-    if (!result.success) {
-        throw new Error(result.error);
-    }
-    return result.data;
-};
+import { signupFormSchema } from "@libs/api";
+import { useSignup } from "@/lib/auth";
 
 export default () => {
     setAuthTitle("Create your account");
-    const { toast } = useToast();
-    const navigate = useNavigate();
 
-    const form = useZodForm(signupSchema, {
+    const signup = useSignup();
+    const form = useZodForm(signupFormSchema, {
         defaultValues: {
             firstName: "",
             lastName: "",
@@ -39,30 +26,14 @@ export default () => {
             password: "",
             confirmPassword: "",
         },
+        onSubmit: (data) => signup.mutate(data),
     });
-    const { handleSubmit, control } = form;
-
-    const mutation = useMutation({
-        mutationFn,
-        onSuccess: (x) => {
-            navigate("/me");
-        },
-        onError: (x) => {
-            toast({
-                title: "Error!",
-                description: x.message,
-            });
-        },
-    });
-
-    const onSubmit: SubmitHandler<SignUpFormInput> = (data) => {
-        mutation.mutate(data);
-    };
+    const { onSubmit, control } = form;
 
     return (
         <>
             <Form {...form}>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={onSubmit} className="space-y-4">
                     <div className="flex space-x-4">
                         <FormField
                             control={control}
@@ -153,7 +124,7 @@ export default () => {
                     <Button
                         type="submit"
                         className="w-full"
-                        disabled={mutation.isPending}
+                        disabled={signup.isPending}
                     >
                         Sign Up
                     </Button>

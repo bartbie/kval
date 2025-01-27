@@ -1,5 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldValues, useForm } from "react-hook-form";
+import React from "react";
+import {
+    FieldValues,
+    SubmitHandler,
+    useForm,
+    UseFormReturn,
+} from "react-hook-form";
 import { z } from "zod";
 
 type RequireKeys<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
@@ -11,14 +17,31 @@ type UseFormOpts<T extends FieldValues> = Exclude<
 type Opts<T extends FieldValues> = RequireKeys<
     Omit<UseFormOpts<T>, "resolver">,
     "defaultValues"
->;
+> & {
+    onSubmit?: SubmitHandler<T>;
+};
 
-export const useZodForm = <T extends z.Schema<any, any>>(
+export const useZodForm = <
+    T extends z.Schema<any, any>,
+    O extends Opts<z.infer<T>>,
+>(
     schema: T,
-    opts: Opts<z.infer<T>>,
-) => {
-    return useForm<z.infer<T>>({
+    opts: O,
+): UseFormReturn<z.infer<T>> & {
+    onSubmit: O extends { onSubmit: SubmitHandler<any> }
+        ? (e: React.BaseSyntheticEvent) => Promise<void>
+        : undefined;
+} => {
+    const onSubmit = opts.onSubmit;
+    if (onSubmit != undefined) {
+        delete opts.onSubmit;
+    }
+    const res = useForm<z.infer<T>>({
         resolver: zodResolver(schema),
         ...opts,
     });
+    return {
+        ...res,
+        onSubmit: onSubmit && (res.handleSubmit(onSubmit) as any),
+    };
 };

@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes } from "react-router";
+import { Navigate, Outlet, Route, Routes } from "react-router";
 import FrontPage from "./FrontPage";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
@@ -6,6 +6,7 @@ import AuthLayout from "./auth/AuthLayout";
 import Home from "./me/Home";
 import CreateProfile from "./auth/CreateProfile";
 import { Toaster } from "@/components/ui/toaster";
+import { ProtectedRoute } from "@/lib/auth";
 
 const RootLayout = () => (
     <>
@@ -26,7 +27,7 @@ export default () => {
                 <Route path="auth">
                     <Route path="create-profile" element={<CreateProfile />} />
                 </Route>
-                <Route path="me">
+                <Route path="me" element={<ProtectedRoute />}>
                     <Route index element={<Home />} />
                 </Route>
             </Route>

@@ -1,7 +1,8 @@
 export default () => {
     return (
         <>
-            <p>hello</p>
+            <main className="flex justify-center items-center min-h-screen">
+            </main>
         </>
     );
 };

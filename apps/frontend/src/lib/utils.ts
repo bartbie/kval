@@ -15,6 +15,7 @@ export type Unpacked<R extends Result<any, any>> =
     R extends Result<infer T, any> ? (T extends void ? null : T) : never;
 
 export const unpackResult: UnpackOverload = <T, E>(result: Result<T, E>) => {
+    console.debug(result);
     const res = result as { success: boolean; error?: E; data?: T };
     if (!res.success) {
         throw new Error(JSON.stringify(res?.error ?? "Failed operation"));
