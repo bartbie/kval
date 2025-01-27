@@ -1,7 +1,6 @@
 import {
     NavigationMenu,
     NavigationMenuItem,
-    NavigationMenuLink,
     NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Link } from "react-router";
@@ -22,7 +21,7 @@ const NavItem: React.FC<{ to: string; children: string }> = ({
 
 export default () => {
     return (
-        <header className="fixed top-0 w-full shadow-md z-50 flex items-center justify-between p-4">
+        <header className="sticky top-0 w-full shadow-md z-50 flex items-center justify-between p-4">
             Musik Sampsil
             <NavigationMenu>
                 <NavigationMenuList>
