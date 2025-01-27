@@ -1,7 +1,12 @@
 import * as api from "@/lib/api/me";
 import { unpackResult } from "@/lib/utils";
 import { LoginInput, MeWithEnsembles, SignUpFormInput } from "@libs/api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    QueryClient,
+    useMutation,
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query";
 import { createContext, useCallback, useContext } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router";
 import * as auth from "./api/auth";
@@ -19,6 +24,7 @@ export type AuthContextValue = {
     error: Error | null;
     logout: () => void;
     trespass: boolean | undefined; // debug purpose
+    invalidate: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -56,6 +62,12 @@ export const AuthProvider = (x: {
         navigate("/");
     }, [queryClient, navigate]);
 
+    const invalidate = useCallback(async () => {
+        await queryClient.invalidateQueries({
+            queryKey: [USE_USER_QUERY_KEY],
+        });
+    }, [queryClient]);
+
     const token = getToken();
     const contextValue = {
         user: user ?? null,
@@ -66,6 +78,7 @@ export const AuthProvider = (x: {
         isError: isError && !!token,
         trespass,
         logout,
+        invalidate,
     };
 
     return (
