@@ -184,6 +184,8 @@ export class EnsembleService {
     if (stat != CheckStatus.UserOwner)
       return err('Only owners can edit ensembles!');
     const [ens] = data;
-    return await update(this.ensembles, ens._id, body);
+    return await update(this.ensembles, ens._id, body, {
+      members: { email: 0, password: 0 },
+    });
   }
 }

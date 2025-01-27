@@ -13,7 +13,7 @@ export class MeService {
       return await this.users
         .aggregate([
           {
-            $match: { _id: new mongoose.Types.ObjectId(id) },
+            $match: { _id: id },
           },
           {
             $lookup: {
