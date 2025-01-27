@@ -13,6 +13,7 @@ import { setAuthTitle } from "./AuthLayout";
 import { useZodForm } from "@/hooks/use-zod-form";
 import { loginSchema } from "@libs/api";
 import { useLogin } from "@/lib/auth";
+import SimpleField from "@/components/forms/SimpleField";
 
 export default () => {
     setAuthTitle("Login");
@@ -31,39 +32,19 @@ export default () => {
         <>
             <Form {...form}>
                 <form onSubmit={onSubmit} className="space-y-4">
-                    <FormField
+                    <SimpleField
                         control={control}
                         name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="email"
-                                        placeholder="Email"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        label="Email"
+                        type="email"
+                        placeholder="Email"
                     />
-                    <FormField
+                    <SimpleField
                         control={control}
                         name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="password"
-                                        placeholder="Password"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        type="password"
+                        label="Password"
+                        placeholder="Password"
                     />
                     <Button
                         type="submit"

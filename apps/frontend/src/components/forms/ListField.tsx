@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Control, useController } from "react-hook-form";
-import { FormControl, FormItem, FormLabel, FormMessage } from "./ui/form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { X } from "lucide-react";
 
 export default ({

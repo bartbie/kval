@@ -13,6 +13,7 @@ import {
 import { useZodForm } from "@/hooks/use-zod-form";
 import { signupFormSchema } from "@libs/api";
 import { useSignup } from "@/lib/auth";
+import SimpleField from "@/components/forms/SimpleField";
 
 export default () => {
     setAuthTitle("Create your account");
@@ -35,91 +36,41 @@ export default () => {
             <Form {...form}>
                 <form onSubmit={onSubmit} className="space-y-4">
                     <div className="flex space-x-4">
-                        <FormField
-                            control={control}
+                        <SimpleField
                             name="firstName"
-                            render={({ field }) => (
-                                <FormItem className="w-1/2">
-                                    <FormLabel>First Name</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            placeholder="First Name"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
+                            label="First Name"
+                            placeholder="Your first name"
+                            type="text"
                             control={control}
+                        />
+                        <SimpleField
                             name="lastName"
-                            render={({ field }) => (
-                                <FormItem className="w-1/2">
-                                    <FormLabel>Last Name</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            placeholder="Last Name"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
+                            label="Last Name"
+                            placeholder="Your last name"
+                            type="text"
+                            control={control}
                         />
                     </div>
-                    <FormField
+                    <SimpleField
                         control={control}
                         name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="email"
-                                        placeholder="Email"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        label="Email"
+                        type="email"
+                        placeholder="Email"
                     />
-                    <FormField
+                    <SimpleField
                         control={control}
                         name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="password"
-                                        placeholder="Password"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        type="password"
+                        label="Password"
+                        placeholder="Password"
                     />
-                    <FormField
+                    <SimpleField
                         control={control}
                         name="confirmPassword"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Confirm Password</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="password"
-                                        placeholder="Confirm Password"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        type="password"
+                        label="Confirm Password"
+                        placeholder="Confirm Password"
                     />
                     <Button
                         type="submit"

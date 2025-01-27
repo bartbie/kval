@@ -19,7 +19,8 @@ import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
-import ListField from "@/components/ListField";
+import ListField from "@/components/forms/ListField";
+import SimpleField from "@/components/forms/SimpleField";
 
 export default () => {
     const { user, invalidate } = useUser();
@@ -55,73 +56,38 @@ export default () => {
     });
     const { onSubmit, control } = form;
 
-    const Field = (
-        args: Exclude<React.ComponentProps<"input">, "name"> & {
-            label: string;
-            name: typeof form extends UseFormReturn<infer T> ? keyof T : never;
-        },
-    ) => {
-        const { name, label, placeholder, type, ...rest } = args;
-        return (
-            <FormField
-                control={control}
-                name={name}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>{label}</FormLabel>
-                        <FormControl>
-                            <Input
-                                type={type}
-                                placeholder={placeholder}
-                                {...field}
-                                {...rest}
-                            />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-        );
-    };
-
     return (
         <>
             <Form {...form}>
                 <form onSubmit={onSubmit} className="">
-                    <Field
+                    <SimpleField
                         name="firstName"
                         label="First Name"
                         placeholder="Your first name"
                         type="text"
+                        control={control}
                     />
-                    <Field
+                    <SimpleField
                         name="lastName"
                         label="Last Name"
                         placeholder="Your last name"
                         type="text"
+                        control={control}
                     />
-                    <Field
+                    <SimpleField
                         name="age"
                         label="Age"
                         placeholder="Your age"
                         type="number"
                         min={18}
-                    />
-                    <FormField
                         control={control}
+                    />
+                    <SimpleField
                         name="bio"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Bio</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        placeholder="Your bio"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        label="Bio"
+                        placeholder="Your bio"
+                        control={control}
+                        element={<Textarea />}
                     />
                     <ListField
                         name="genres"
