@@ -12,7 +12,7 @@ import * as API from "@libs/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router";
 
-export function SkeletonCard() {
+const SkeletonCard = () => {
     return (
         <div className="flex flex-col space-y-3">
             <Skeleton className="h-[100px] w-[250px] rounded-xl" />
@@ -22,7 +22,7 @@ export function SkeletonCard() {
             </div>
         </div>
     );
-}
+};
 
 const Ensemble = ({ ensemble: e }: { ensemble: API.Ensemble }) => (
     <Card key={e._id} className="hover:shadow-lg transition-shadow">

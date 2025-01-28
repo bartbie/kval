@@ -4,7 +4,7 @@ import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import AuthLayout from "./auth/AuthLayout";
 import Home from "./me/Home";
-import CreateProfile from "./auth/CreateProfile";
+import CreateProfile from "./me/EditProfile";
 import { Toaster } from "@/components/ui/toaster";
 import { ProtectedRoute } from "@/lib/auth";
 import { BaseHeader } from "@/components/headers/BaseHeader";
@@ -40,7 +40,6 @@ export default () => {
                     }
                 >
                     <Route path="logout" element={<Logout />} />
-                    <Route path="create-profile" element={<CreateProfile />} />
                 </Route>
                 <Route
                     path="ensembles"
@@ -62,6 +61,7 @@ export default () => {
                     }
                 >
                     <Route index element={<Home />} />
+                    <Route path="profile" element={<CreateProfile />} />
                 </Route>
             </Route>
         </Routes>

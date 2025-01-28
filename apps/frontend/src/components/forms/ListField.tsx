@@ -3,7 +3,7 @@ import { Control, useController } from "react-hook-form";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { X } from "lucide-react";
+import { Plus, PlusCircle, X } from "lucide-react";
 
 export default ({
     name,
@@ -12,7 +12,7 @@ export default ({
     control,
 }: {
     name: "instruments" | "genres";
-    label: string;
+    label: React.ReactNode;
     placeholder: string;
     control: Control<any>;
 }) => {
@@ -36,8 +36,8 @@ export default ({
         <FormItem>
             <FormLabel>{label}</FormLabel>
             <FormControl>
-                <div className="space-y-2">
-                    <div className="flex gap-2">
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between gap-2">
                         <Input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
@@ -49,7 +49,12 @@ export default ({
                                 }
                             }}
                         />
-                        <Button type="button" onClick={addItem}>
+                        <Button
+                            type="button"
+                            variant={"outline"}
+                            onClick={addItem}
+                        >
+                            <PlusCircle className="h-4 w-4 mr-2" />
                             Add
                         </Button>
                     </div>

@@ -165,7 +165,7 @@ export const useSignup = () => {
             await queryClient.invalidateQueries({
                 queryKey: [USE_USER_QUERY_KEY],
             });
-            await navigate("/auth/create-profile");
+            await navigate("/me/profile");
         },
         onError: (e) => {
             toast({
