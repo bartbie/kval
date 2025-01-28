@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { BadgeIcon, PlusCircle, X } from "lucide-react";
+import { BadgeIcon, Delete, PlusCircle, X } from "lucide-react";
 import { useZodForm } from "@/hooks/use-zod-form";
 import * as API from "@libs/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useIdParam } from "@/hooks/use-id-param";
 import { unpackResult } from "@/lib/utils";
-import { edit as update, get } from "@/lib/api/ensembles";
+import { edit as update, get, disband } from "@/lib/api/ensembles";
 import { Link, useNavigate } from "react-router";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -22,8 +22,14 @@ import { Textarea } from "@/components/ui/textarea";
 import ListField from "@/components/forms/ListField";
 import { Skeleton } from "@/components/ui/skeleton";
 import BigCard from "@/components/forms/BigCard";
+import { useUser } from "@/hooks/use-user";
 
+const handleClick = (fn: () => void) => (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
+    fn();
+};
 export default () => {
+    const { invalidate } = useUser();
     const { id } = useIdParam();
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -51,6 +57,25 @@ export default () => {
         },
     });
 
+    const del = useMutation({
+        mutationFn: async () => unpackResult(await disband(id)),
+        onSuccess: async () => {
+            toast({
+                title: "Success!",
+                description: "You disbanded your ensemble",
+            });
+            await queryClient.removeQueries({ queryKey: ["ensembles", id] });
+            await invalidate();
+            await navigate("/me");
+        },
+        onError: (e) => {
+            toast({
+                title: "Error!",
+                description: e.message ?? "Operation Failed",
+            });
+        },
+    });
+
     const form = useZodForm(API.updateEnsembleSchema, {
         defaultValues: {
             name: data?.name,
@@ -61,13 +86,27 @@ export default () => {
     });
     const { onSubmit } = form;
 
+    const DelButton = () => (
+        <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleClick(del.mutate)}
+        >
+            <Delete className="h-4 w-4 mr-2" />
+            Disband
+        </Button>
+    );
+
     return (
         <BigCard
             isLoading={isLoading}
             header={
                 <>
                     <CardTitle className="text-3xl font-bold">
-                        Edit Ensemble
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            Edit Ensemble
+                            <DelButton />
+                        </div>
                     </CardTitle>
                     <CardDescription></CardDescription>
                 </>

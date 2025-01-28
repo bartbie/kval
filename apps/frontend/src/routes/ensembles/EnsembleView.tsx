@@ -19,25 +19,65 @@ import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/hooks/use-user";
 import * as api from "@/lib/api/ensembles";
 import { unpackResult } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { Bookmark, Edit, Music, Users2 } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Bookmark, DoorOpen, Edit, Music, Plus, Users2 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
+import * as API from "@libs/api";
 
-const EditButton = ({ disabled }: { disabled?: boolean }) => (
-    <Button variant="outline" size="sm" disabled={disabled ?? false}>
-        <Edit className="h-4 w-4 mr-2" />
-        Edit
-    </Button>
-);
+const handleClick = (fn: () => void) => (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
+    fn();
+};
 
 export default () => {
     const { user } = useUser();
     const { id } = useIdParam();
     const { toast } = useToast();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const { data, isError, error, isLoading } = useQuery({
         queryFn: async () => unpackResult(await api.get(id)),
         queryKey: ["ensembles", id],
+    });
+
+    const invalidate = async (id: string) => {
+        await queryClient.invalidateQueries({
+            queryKey: ["ensembles", id],
+        });
+    };
+
+    const join = useMutation({
+        mutationFn: async () => unpackResult(await api.join(id)),
+        onSuccess: async ({ _id, name }) => {
+            await invalidate(_id);
+            toast({
+                title: "Success!",
+                description: `You joined ${name}`,
+            });
+        },
+        onError: (e) => {
+            toast({
+                title: "Error!",
+                description: e.message ?? "Operation Failed",
+            });
+        },
+    });
+
+    const leave = useMutation({
+        mutationFn: async () => unpackResult(await api.leave(id)),
+        onSuccess: async ({ _id, name }) => {
+            await invalidate(_id);
+            toast({
+                title: "Success!",
+                description: `You left ${name}`,
+            });
+        },
+        onError: (e) => {
+            toast({
+                title: "Error!",
+                description: e.message ?? "Operation Failed",
+            });
+        },
     });
 
     if (isLoading) return <div>Loading...</div>;
@@ -53,6 +93,32 @@ export default () => {
     const { name, createdBy, bio, genres, members } = data;
     const owner = members.filter((m) => m._id === createdBy)[0];
     const isOwner = owner._id === user._id;
+    const isMember = members.some((m) => m._id === user._id);
+
+    const EditButton = ({ disabled }: { disabled?: boolean }) => (
+        <Button variant="outline" size="sm" disabled={disabled ?? false}>
+            <Edit className="h-4 w-4 mr-2" />
+            Edit
+        </Button>
+    );
+
+    const JoinButton = () => (
+        <Button variant="outline" size="sm" onClick={handleClick(join.mutate)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Join
+        </Button>
+    );
+
+    const LeaveButton = () => (
+        <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleClick(leave.mutate)}
+        >
+            <DoorOpen className="h-4 w-4 mr-2" />
+            Leave
+        </Button>
+    );
 
     return (
         <main className="flex justify-center items-center min-h-screen p-4">
@@ -72,22 +138,30 @@ export default () => {
                                 </span>
                             </div>
                         </div>
-                        <Tooltip>
-                            <TooltipTrigger>
-                                {isOwner ? (
-                                    <Link to={"edit"}>
-                                        <EditButton />
-                                    </Link>
-                                ) : (
-                                    <EditButton disabled />
-                                )}
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                {!isOwner
-                                    ? "Only owners can edit their ensembles."
-                                    : "As an owner you can edit this ensemble."}
-                            </TooltipContent>
-                        </Tooltip>
+                        <div>
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    {isMember ? (
+                                        isOwner ? (
+                                            <Link to={"edit"}>
+                                                <EditButton />
+                                            </Link>
+                                        ) : (
+                                            <LeaveButton />
+                                        )
+                                    ) : (
+                                        <JoinButton />
+                                    )}
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    {isMember
+                                        ? isOwner
+                                            ? "As an owner you can edit this ensemble."
+                                            : "As a member you can leave this ensemble."
+                                        : "As an non-member you can join this ensemble."}
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                     </div>
                     <div className="flex gap-2">
                         {genres.map((g) => (

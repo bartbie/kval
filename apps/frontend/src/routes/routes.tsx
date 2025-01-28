@@ -14,6 +14,7 @@ import EnsembleView from "./ensembles/EnsembleView";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import EnsembleEdit from "./ensembles/EnsembleEdit";
 import EnsembleAdd from "./ensembles/EnsembleAdd";
+import UserView from "./users/UserView";
 
 const RootLayout = () => (
     <>
@@ -54,6 +55,16 @@ export default () => {
                     <Route path=":id" element={<EnsembleView />} />
                     <Route path=":id/edit" element={<EnsembleEdit />} />
                     <Route path="create" element={<EnsembleAdd />} />
+                </Route>
+                <Route
+                    path="users"
+                    element={
+                        <ProtectedRoute>
+                            <MeLayout />
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route path=":id" element={<UserView />} />
                 </Route>
                 <Route
                     path="me"
