@@ -24,11 +24,8 @@ export const disband = async (id: string): AResult<void> => {
     return await api.delete(`/ensembles/${id}`);
 };
 
-export const create = async (
-    id: string,
-    data: API.NewEnsemble,
-): AResult<API.Ensemble> => {
-    return await api.post(`/ensembles/${id}`, data);
+export const create = async (data: API.NewEnsemble): AResult<API.Ensemble> => {
+    return await api.post(`/ensembles/`, data);
 };
 
 export const edit = async (
