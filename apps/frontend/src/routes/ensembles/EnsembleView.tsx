@@ -23,6 +23,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Bookmark, Edit, Music, Users2 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 
+const EditButton = ({ disabled }: { disabled?: boolean }) => (
+    <Button variant="outline" size="sm" disabled={disabled ?? false}>
+        <Edit className="h-4 w-4 mr-2" />
+        Edit
+    </Button>
+);
+
 export default () => {
     const { user } = useUser();
     const { id } = useIdParam();
@@ -45,6 +52,7 @@ export default () => {
 
     const { name, createdBy, bio, genres, members } = data;
     const owner = members.filter((m) => m._id === createdBy)[0];
+    const isOwner = owner._id === user._id;
 
     return (
         <main className="flex justify-center items-center min-h-screen p-4">
@@ -60,22 +68,22 @@ export default () => {
                                 <span>
                                     Created by {owner.firstName}{" "}
                                     {owner.lastName}
+                                    {isOwner && " (You)"}
                                 </span>
                             </div>
                         </div>
                         <Tooltip>
                             <TooltipTrigger>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={owner._id !== user._id}
-                                >
-                                    <Edit className="h-4 w-4 mr-2" />
-                                    Edit
-                                </Button>
+                                {isOwner ? (
+                                    <Link to={"edit"}>
+                                        <EditButton />
+                                    </Link>
+                                ) : (
+                                    <EditButton disabled />
+                                )}
                             </TooltipTrigger>
                             <TooltipContent>
-                                {owner._id !== user._id
+                                {!isOwner
                                     ? "Only owners can edit their ensembles."
                                     : "As an owner you can edit this ensemble."}
                             </TooltipContent>
@@ -133,29 +141,8 @@ export default () => {
                             ))}
                         </p>
                     </div>
-                    {/* <div className="flex items-center text-sm text-muted-foreground">
-                        <time>Created January 2024</time>
-                    </div> */}
                 </CardContent>
             </Card>
         </main>
-        // <main className="flex justify-center items-center min-h-screen">
-        //     <Card className="max-w-xl">
-        //         <CardHeader>
-        //             <div className="flex items-center justify-between">
-        //                 <CardTitle className="text-center text-2xl">
-        //                     {name}
-        //                 </CardTitle>
-        //                 <div className="flex items-center space-x-2 cursor-pointer"></div>
-        //             </div>
-        //             <CardDescription className="text-base mt-4">
-        //                 <span className="text-sm text-muted-foreground">
-        //                     created by {owner.firstName} {owner.lastName}
-        //                 </span>
-        //             </CardDescription>
-        //         </CardHeader>
-        //         <CardContent>{bio}</CardContent>
-        //     </Card>
-        // </main>
     );
 };

@@ -3,9 +3,10 @@ import {
     NavigationMenuItem,
     NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import React from "react";
 import { Link } from "react-router";
 
-export const NavItem: React.FC<{ to: string; children: string }> = ({
+export const NavItem: React.FC<{ to: string; children: React.ReactNode }> = ({
     to,
     children,
 }) => (
