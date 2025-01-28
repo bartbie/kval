@@ -26,7 +26,7 @@ export function SkeletonCard() {
 
 const Ensemble = ({ ensemble: e }: { ensemble: API.Ensemble }) => (
     <Card key={e._id} className="hover:shadow-lg transition-shadow">
-        <Link to={`/me/ensembles/${e._id}`}>
+        <Link to={`/ensembles/${e._id}`}>
             <CardHeader>
                 <CardTitle className="line-clamp-1">{e.name}</CardTitle>
                 <CardDescription className="line-clamp-3">

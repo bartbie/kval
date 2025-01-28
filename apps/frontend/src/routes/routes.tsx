@@ -10,12 +10,15 @@ import { ProtectedRoute } from "@/lib/auth";
 import { BaseHeader } from "@/components/headers/BaseHeader";
 import MeLayout from "./me/MeLayout";
 import Logout from "./auth/Logout";
-import EnsembleView from "./me/ensembles/EnsembleView";
+import EnsembleView from "./ensembles/EnsembleView";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const RootLayout = () => (
     <>
-        <Outlet />
-        <Toaster />
+        <TooltipProvider>
+            <Outlet />
+            <Toaster />
+        </TooltipProvider>
     </>
 );
 
@@ -40,6 +43,17 @@ export default () => {
                     <Route path="create-profile" element={<CreateProfile />} />
                 </Route>
                 <Route
+                    path="ensembles"
+                    element={
+                        <ProtectedRoute>
+                            <MeLayout />
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route path=":id" element={<EnsembleView />} />
+                    <Route index element={<Home />} />
+                </Route>
+                <Route
                     path="me"
                     element={
                         <ProtectedRoute>
@@ -47,7 +61,6 @@ export default () => {
                         </ProtectedRoute>
                     }
                 >
-                    <Route path="ensembles/:id" element={<EnsembleView />} />
                     <Route index element={<Home />} />
                 </Route>
             </Route>
